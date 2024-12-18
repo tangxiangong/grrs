@@ -31,6 +31,6 @@ fn main() -> Result<()> {
     //     if line.contains(&args.pattern) {
     //         println!("{}", line);
     //     }
-    // }
+    // } 
 
 }

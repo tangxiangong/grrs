@@ -3,6 +3,7 @@ use std::io::{self, Write, BufWriter, BufRead, BufReader};
 use std::path::PathBuf;
 use structopt::StructOpt;
 use anyhow::{Context, Result};
+use colored::Colorize;
 
 
 /// Search for a pattern in a file and display the lines that contain it.
@@ -26,11 +27,14 @@ pub fn work(args: &Cli) -> Result<()> {
         .with_context(|| format!("could not open file {}", path))?;
     let reader = BufReader::new(file);
     let mut counter = 0;
+    let red_text = args.pattern.clone().red().to_string();
+    
     for (num, result) in reader.lines().enumerate() {
         let line = result.with_context(|| format!("could not read file {}", path))?;
         if line.contains(&args.pattern) {
+            let color_line = line.replace(&args.pattern, &red_text);
             counter += 1;
-            writeln!(handle, "No.{}, Line {}: \"{}\"", counter, num+1, line)
+            writeln!(handle, "No.{}, Line {}: \"{}\"", counter, num+1, color_line)
                 .with_context(|| "error")?;
         }
     }
